@@ -1,0 +1,264 @@
+/* Estilos gerais */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Estilos para o menu de navegação */
+nav {
+    background-color: #4CAF50;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para formulários */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* Estilos para botões */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 2px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para a lista de alunos e turmas */
+#lista-alunos,
+#lista-turmas {
+    margin-bottom: 20px;
+}
+
+.aluno-item,
+.turma-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.aluno-item:hover,
+.turma-item:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-presenca {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-presenca[data-status="P"] {
+    background-color: #4CAF50;
+}
+
+.btn-presenca[data-status="F"] {
+    background-color: #f44336;
+}
+
+.btn-presenca[data-status="FJ"] {
+    background-color: #2196F3;
+}
+
+.btn-presenca:hover {
+    opacity: 0.9;
+}
+
+/* Estilos para mensagens de feedback */
+.mensagem {
+    display: none;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mensagem.sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensagem.erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Estilos para telas menores (mobile) */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    nav ul {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    nav ul li a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .aluno-item,
+    .turma-item {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .btn-presenca {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
+#pagina-inicial-botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 20px;
+}
+#pagina-inicial-botoes button {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#pagina-inicial-botoes button:hover {
+    background-color: #45a049;
+}
+/* Estilos para os botões de presença */
+.btn-presenca {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    width: 50px; /* Largura fixa para consistência */
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-presenca[data-status="P"] {
+    background-color: #4CAF50;
+}
+
+.btn-presenca[data-status="F"] {
+    background-color: #f44336;
+}
+
+.btn-presenca[data-status="FJ"] {
+    background-color: #2196F3;
+}
+
+.btn-presenca:hover {
+    opacity: 0.9;
+}

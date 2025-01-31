@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Aluno</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="turmas.html">Turmas</a></li>
+            <li><a href="cadastro.html">Cadastrar Aluno</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Cadastrar Aluno</h1>
+        <form id="form-cadastro">
+            <div class="form-group">
+                <label for="nome">Nome do Aluno:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="turma">Selecione a Turma:</label>
+                <select id="turma" name="turma" required>
+                    <option value="">Selecione uma turma...</option>
+                    <!-- As turmas serão carregadas aqui -->
+                </select>
+            </div>
+        
+            <button type="submit">Cadastrar</button>
+        </form>
+        <button onclick="location.href='index.html'">Voltar</button>
+
+        <!-- Mensagem de feedback -->
+        <div id="mensagem-feedback" class="mensagem"></div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+    <script>
+        // Função para carregar as turmas no menu dropdown
+        async function loadTurmasDropdown() {
+            const selectTurma = document.getElementById('turma');
+            if (!selectTurma) {
+                console.error('Elemento com ID "turma" não encontrado.');
+                return;
+            }
+
+            selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
+
+            try {
+                const data = await fetchSheetData(TURMAS_RANGE);
+                const turmas = data.values;
+
+                if (turmas && turmas.length > 0) {
+                    turmas.forEach(turma => {
+                        const option = document.createElement('option');
+                        option.value = turma[0]; // ID da turma
+                        option.textContent = turma[1]; // Nome da turma
+                        selectTurma.appendChild(option);
+                    });
+                } else {
+                    selectTurma.innerHTML = '<option value="">Nenhuma turma cadastrada.</option>';
+                }
+            } catch (erro) {
+                selectTurma.innerHTML = '<option value="">Erro ao carregar turmas.</option>';
+                console.error(erro);
+            }
+        }
+
+        // Função para exibir mensagens de feedback
+        function exibirMensagem(mensagem, tipo) {
+            const mensagemDiv = document.getElementById('mensagem-feedback');
+            mensagemDiv.textContent = mensagem;
+            mensagemDiv.className = `mensagem ${tipo}`;
+            mensagemDiv.style.display = 'block';
+
+            // Oculta a mensagem após 3 segundos
+            setTimeout(() => {
+                mensagemDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Carrega as turmas ao abrir a página
+        loadTurmasDropdown();
+    </script>
+</body>
+</html>

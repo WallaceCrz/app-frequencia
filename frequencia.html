@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Frequência</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="turmas.html">Turmas</a></li>
+            <li><a href="cadastro.html">Cadastrar Aluno</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1 id="titulo-turma">Registrar Frequência</h1>
+        <div class="form-group">
+            <label for="data-frequencia">Selecione a Data:</label>
+            <input type="date" id="data-frequencia" name="data-frequencia" required>
+        </div>
+        <div id="lista-alunos">
+            <!-- A lista de alunos será carregada aqui -->
+            <p>Carregando alunos...</p>
+        </div>
+        <button onclick="salvarFrequencia()">Salvar Frequência</button>
+        <button onclick="location.href='turmas.html'">Voltar</button>
+    </div>
+
+    <script src="scripts/app.js"></script>
+    <script>document.getElementById('data-frequencia').value = new Date().toISOString().split('T')[0];</script>
+</body>
+</html>
