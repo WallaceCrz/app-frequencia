@@ -5,8 +5,6 @@ const TURMAS_RANGE = 'Turmas!A2:B'; // Intervalo de dados da aba "Turmas"
 const ALUNOS_RANGE = 'Alunos!A2:C'; // Intervalo de dados da aba "Alunos"
 const FREQUENCIA_RANGE = 'Frequencia!A2:C'; // Intervalo de dados da aba "Frequencia"
 let ACCESS_TOKEN = '';
-const ACCESS_TOKEN = 'ya29.c.c0ASRK0GaopDlZ2fgXzSoVVvqUzury43MNEvaEhlyHeRBGvBTDAzfA8mB_4NQqEHMMrHMUrLxjq979O7sWTCburkzBrqpJW4Ep50b1hdTZCBpfs-Av9N99SQ32SnOD2Gtbs-GVgBPluSuKWeEm6wHuElB22t1xoruT5lJ1II5W7WWIOEkwyDw8kruf3GCm92-5uf5Kc5-7OLQiyJc1A1HbZbm5-S4LkHTvhxkPAxcRYI59dC_us5d2rrRzl2OY6fSZAIHwzMVGHvUw4aauqqJRASH-LhMO4CoSz3sVu8qwnzm45xZ59oBxdWGX03dsr7NEXrLEPp-FDX5blgClg_dvviHgJGczE7N0Sc_QZrpHhyJmgPYDEgt8m1IE384DZvvbVu07Oiciuiat33MvfQYaJMhtjcqxOh5f_ZvFlo1qZj7487i9Slird3iqxisxnSW6bnrl0gsz8dnZUsvaQ8-zSmdFaw3UnUFhc971aU7mihSqYpbqh0UVivpkJ5usqhvuFqkZSX_ceZtU0qab3hfgV6kiV9krYSWIW3xR9z5Xk6F8bqqlQc08iWqX-_elXjiqZ6k-yyxkg27o1mJ3y8cQeaa7zguIqm-Opx5dewB79eV7gqSXjieml9sp--qIxagIzp_I_6jIR6OYRMZnyXS0-yJfg01UW38Jxu3idaJU8VlXp5YhXwfMquW_pjFY_aqvbZX8mleIzmIO88zfxm4m4ZQaX9MB6-9qfd66Qvfk-j-paOZve-aYXBUxI5Ik7y-B0rl1Z1iIwtqcb11fv-9OeyUusMWnXetvUegjsWs25nJo-OMV9hZutk_VjXU3lFj2Qpksobth7Z9o3sneQnmpicbb0lgRf328yjQmgWkFg4r7dokrJ84nm-gxSFrvw5Yn28v8epy7egulZJdWrv373eQMtM5if6qdbxi_sUy17kXuShvlfem_feB_qay_e7vJU43-mjqgmMRB9fZtshqgUwvpdtOfppOcWqMnYdzXj_tfj-OfMUh86kr'; // Substitua pelo token gerado
-
 // Função para obter o token de acesso do backend
 async function getAccessToken() {
     try {
