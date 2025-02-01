@@ -244,7 +244,7 @@ async function salvarFrequencia() {
     try {
         const frequenciaExistente = await verificarFrequenciaExistente(turmaId, dataFrequencia);
         if (frequenciaExistente) {
-            alert('Frequência para esta turma e data já foi registrada.');
+            alert('Uma frequência para esta turma e data já foi registrada nessa data.');
             return;
         }
     } catch (erro) {
