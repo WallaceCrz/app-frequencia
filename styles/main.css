@@ -137,7 +137,7 @@ button:hover {
 }
 
 .btn-presenca[data-status="P"] {
-    background-color: #2196F3; /* Azul */
+    background-color: #4CAF50; /* Verde */
 }
 
 .btn-presenca[data-status="F"] {
