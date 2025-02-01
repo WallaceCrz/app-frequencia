@@ -1,21 +1,22 @@
 {
-    "short_name": "Frequencia",
-    "name": "App de Frequência Escolar",
-    "icons": [
-      {
-        "src": "icon-192x192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      },
-      {
-        "src": "icon-512x512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ],
-    "start_url": "/index.html",
-    "background_color": "#4CAF50",
-    "display": "fullscreen",
-    "scope": "/",
-    "theme_color": "#4CAF50"
-  }
+  "short_name": "FrequenciaApp",
+  "name": "App de Frequência Escolar",
+  "description": "Um aplicativo para registrar a frequência dos alunos.",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "fullscreen",
+  "scope": "/",
+  "theme_color": "#000000"
+}

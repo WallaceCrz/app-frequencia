@@ -1,32 +1,63 @@
 // Configurações da Planilha
 const SPREADSHEET_ID = '103-Ljds6f9pvdGm-8kXG1XuMeaKj4RPmzEObo2EyDFs'; // ID da sua planilha
-const API_KEY = 'af90990c9b6e78592f38e3114e368cfcec397490'; // Sua chave da API
 const TURMAS_RANGE = 'Turmas!A2:B'; // Intervalo de dados da aba "Turmas"
 const ALUNOS_RANGE = 'Alunos!A2:C'; // Intervalo de dados da aba "Alunos"
 const FREQUENCIA_RANGE = 'Frequencia!A2:C'; // Intervalo de dados da aba "Frequencia"
-let ACCESS_TOKEN = '';
-// Função para obter o token de acesso do backend
+
+// Defina o token de acesso manualmente aqui
+let ACCESS_TOKEN = ''; // Substitua pelo token que você gerou manualmente
+
 async function getAccessToken() {
     try {
         const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=Fsnpm4rxFclXlgwhIOmaaPAbuU-5D3XXsGC2TbQsRCQJJ5o3usWrY5Ulw7T9A0Hnd2a55mcQKkVc9QlYADdH2T6MV2qxPVHkm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLY2akZkiofaDCJp5m2Jv6HAOF8pigkgyLO4qduNzmsIk-wVmANTm_dc6B9IaA3GBwU1ilyFiMBu2MVyXXBGjzY1FG-7dlb48A&lib=MK03d-YApCvcHCyBc5rILbO9D7zY1TYX_');
+        if (!response.ok) {
+            throw new Error(`Erro ao obter token: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
-        ACCESS_TOKEN = data.token;
-        console.log('Token obtido com sucesso:', ACCESS_TOKEN);
+        const token = data.token;
+
+        // Armazena o token e o horário atual no localStorage
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('tokenTimestamp', Date.now());
+
+        console.log('Token obtido com sucesso:', token);
+        return token;
     } catch (erro) {
         console.error('Erro ao obter token:', erro);
+        throw erro;
     }
 }
+async function getValidAccessToken() {
+    const token = localStorage.getItem('accessToken');
+    const tokenTimestamp = localStorage.getItem('tokenTimestamp');
+
+    // Verifica se o token existe e se ainda está válido (1 hora de validade)
+    if (token && tokenTimestamp && (Date.now() - tokenTimestamp < 3600000)) {
+        console.log('Token ainda válido. Reutilizando:', token);
+        return token;
+    } else {
+        console.log('Token expirado ou não encontrado. Gerando novo token...');
+        return await getAccessToken(); // Gera um novo token
+    }
+}
+
+
+
 // Função para buscar dados da planilha
 async function fetchSheetData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
     try {
+        // Obtém o token válido
+        const token = await getValidAccessToken();
+
         const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`,
+                'Authorization': `Bearer ${token}`,
             },
         });
         if (!response.ok) {
-            throw new Error('Erro ao carregar dados da planilha');
+            const errorDetails = await response.json();
+            throw new Error(`Erro ao carregar dados da planilha: ${response.status} ${response.statusText}. Detalhes: ${JSON.stringify(errorDetails)}`);
         }
         const data = await response.json();
         console.log('Dados carregados:', data);
@@ -36,34 +67,6 @@ async function fetchSheetData(range) {
         throw erro;
     }
 }
-// Função para adicionar dados à planilha
-async function appendSheetData(range, valores) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                values: valores,
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Erro ao enviar dados para a planilha.');
-        }
-
-        const data = await response.json();
-        console.log('Dados enviados com sucesso:', data);
-        return data;
-    } catch (erro) {
-        console.error('Erro ao enviar dados:', erro);
-        throw erro;
-    }
-}
-getAccessToken();
 
 // Função para carregar as turmas
 async function loadTurmas(containerId) {
@@ -73,12 +76,12 @@ async function loadTurmas(containerId) {
         return;
     }
 
-    console.log('Elemento lista-turmas encontrado:', listaTurmas); // Log para depuração
+    console.log('Elemento lista-turmas encontrado:', listaTurmas);
     listaTurmas.innerHTML = '<p>Carregando turmas...</p>';
 
     try {
         const data = await fetchSheetData(TURMAS_RANGE);
-        console.log('Dados das turmas:', data); // Log para depuração
+        console.log('Dados das turmas:', data);
         const turmas = data.values;
 
         if (turmas && turmas.length > 0) {
@@ -89,7 +92,6 @@ async function loadTurmas(containerId) {
                 turmaDiv.innerHTML = `
                     <span>${turma[1]}</span>
                 `;
-                // Adiciona o evento de clique para redirecionar
                 turmaDiv.onclick = () => {
                     window.location.href = `frequencia.html?turmaId=${turma[0]}`;
                 };
@@ -189,6 +191,7 @@ function alternarPresenca(event) {
     botao.style.backgroundColor = cor;
 }
 
+// Função para salvar a frequência
 async function salvarFrequencia() {
     const listaAlunos = document.getElementById('lista-alunos');
     const botoesPresenca = listaAlunos.querySelectorAll('.btn-presenca');
@@ -239,69 +242,6 @@ async function salvarFrequencia() {
         alert('Erro ao salvar frequência. Verifique o console.');
     }
 }
-async function appendSheetData(range, valores) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                values: valores,
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Erro ao enviar dados para a planilha.');
-        }
-
-        const data = await response.json();
-        console.log('Dados enviados com sucesso:', data); // Log para depuração
-        return data;
-    } catch (erro) {
-        console.error('Erro ao enviar dados:', erro);
-        throw erro;
-    }
-}
-
-// Carrega os alunos ao abrir a página
-if (window.location.pathname.endsWith('frequencia.html')) {
-    loadAlunos();
-}
-
-// Carrega as turmas ao abrir a página
-if (window.location.pathname.endsWith('turmas.html') || window.location.pathname.endsWith('cadastro.html')) {
-    console.log('Carregando turmas...'); // Log para depuração
-    loadTurmas('lista-turmas');
-}
-// Adiciona o evento de submit ao formulário
-document.getElementById('form-cadastro').addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    const nome = document.getElementById('nome').value;
-    const turmaId = document.getElementById('turma').value;
-
-    if (!nome || !turmaId) {
-        exibirMensagem('Preencha todos os campos!', 'erro');
-        return;
-    }
-
-    try {
-        // Carrega os alunos existentes para gerar o próximo ID
-        const dataAlunos = await fetchSheetData(ALUNOS_RANGE);
-        const proximoId = dataAlunos.values.length + 1; // Gera o próximo ID
-
-        // Adiciona o aluno à planilha na ordem correta: ID, Nome, Turma
-        await appendSheetData('Alunos!A2:C', [[proximoId, nome, turmaId]]);
-        exibirMensagem('Aluno cadastrado com sucesso!', 'sucesso');
-        document.getElementById('form-cadastro').reset(); // Limpa o formulário
-    } catch (erro) {
-        console.error('Erro ao cadastrar aluno:', erro);
-        exibirMensagem('Erro ao cadastrar aluno. Verifique o console.', 'erro');
-    }
-});
 
 // Função para verificar se já existe frequência para a turma e data
 async function verificarFrequenciaExistente(turmaId, data) {
@@ -321,14 +261,50 @@ async function verificarFrequenciaExistente(turmaId, data) {
         throw erro;
     }
 }
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then((registration) => {
-                console.log('Service Worker registrado com sucesso:', registration);
-            })
-            .catch((error) => {
-                console.error('Erro ao registrar Service Worker:', error);
-            });
-    });
+
+// Carrega os alunos ao abrir a página
+if (window.location.pathname.endsWith('frequencia.html')) {
+    loadAlunos();
 }
+
+// Carrega as turmas ao abrir a página
+if (window.location.pathname.endsWith('turmas.html') || window.location.pathname.endsWith('cadastro.html')) {
+    console.log('Carregando turmas...'); // Log para depuração
+    loadTurmas('lista-turmas');
+}
+
+// Adiciona o evento de submit ao formulário
+document.getElementById('form-cadastro')?.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('nome').value;
+    const turmaId = document.getElementById('turma').value;
+
+    if (!nome || !turmaId) {
+        alert('Preencha todos os campos!');
+        return;
+    }
+
+    try {
+        // Carrega os alunos existentes para gerar o próximo ID
+        const dataAlunos = await fetchSheetData(ALUNOS_RANGE);
+        const proximoId = dataAlunos.values.length + 1; // Gera o próximo ID
+
+        // Adiciona o aluno à planilha na ordem correta: ID, Nome, Turma
+        await appendSheetData('Alunos!A2:C', [[proximoId, nome, turmaId]]);
+        alert('Aluno cadastrado com sucesso!');
+        document.getElementById('form-cadastro').reset(); // Limpa o formulário
+    } catch (erro) {
+        console.error('Erro ao cadastrar aluno:', erro);
+        alert('Erro ao cadastrar aluno. Verifique o console.');
+    }
+});
+// Inicializa o token quando o app é carregado
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const token = await getValidAccessToken();
+        console.log('Token inicializado:', token);
+    } catch (erro) {
+        console.error('Erro ao inicializar o token:', erro);
+    }
+});
