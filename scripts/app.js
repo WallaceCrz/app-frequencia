@@ -7,6 +7,35 @@ const FREQUENCIA_RANGE = 'Frequencia!A2:C'; // Intervalo de dados da aba "Freque
 // Defina o token de acesso manualmente aqui
 let ACCESS_TOKEN = ''; // Substitua pelo token que você gerou manualmente
 
+// Defina a função appendSheetData antes de usá-la
+async function appendSheetData(range, valores) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
+    try {
+        const token = await getValidAccessToken(); // Obtém o token válido
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                values: valores,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao enviar dados para a planilha: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Dados enviados com sucesso:', data);
+        return data;
+    } catch (erro) {
+        console.error('Erro ao enviar dados:', erro);
+        throw erro;
+    }
+}
+
 async function getAccessToken() {
     try {
         const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=Fsnpm4rxFclXlgwhIOmaaPAbuU-5D3XXsGC2TbQsRCQJJ5o3usWrY5Ulw7T9A0Hnd2a55mcQKkVc9QlYADdH2T6MV2qxPVHkm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLY2akZkiofaDCJp5m2Jv6HAOF8pigkgyLO4qduNzmsIk-wVmANTm_dc6B9IaA3GBwU1ilyFiMBu2MVyXXBGjzY1FG-7dlb48A&lib=MK03d-YApCvcHCyBc5rILbO9D7zY1TYX_');
