@@ -18,13 +18,13 @@ body {
 
 h1, h2, h3 {
     text-align: center;
-    color: #4CAF50;
+    color: #2196F3; /* Azul */
     margin-bottom: 20px;
 }
 
 /* Estilos para o menu de navegação */
 nav {
-    background-color: #4CAF50;
+    background-color: #2196F3; /* Azul */
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -52,7 +52,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #45a049;
+    background-color: #1e88e5; /* Azul mais escuro */
 }
 
 /* Estilos para formulários */
@@ -80,15 +80,15 @@ nav ul li a:hover {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    border-color: #2196F3; /* Azul */
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Azul */
 }
 
 /* Estilos para botões */
 button {
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #2196F3; /* Azul */
     color: white;
     border: none;
     border-radius: 4px;
@@ -99,7 +99,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #1e88e5; /* Azul mais escuro */
 }
 
 /* Estilos para a lista de alunos e turmas */
@@ -137,15 +137,15 @@ button:hover {
 }
 
 .btn-presenca[data-status="P"] {
-    background-color: #4CAF50;
+    background-color: #2196F3; /* Azul */
 }
 
 .btn-presenca[data-status="F"] {
-    background-color: #f44336;
+    background-color: #f44336; /* Vermelho */
 }
 
 .btn-presenca[data-status="FJ"] {
-    background-color: #2196F3;
+    background-color: #2196F3; /* Azul */
 }
 
 .btn-presenca:hover {
@@ -213,18 +213,20 @@ button:hover {
         margin-top: 5px;
     }
 }
+
 #pagina-inicial-botoes {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Espaçamento entre os botões */
     margin-top: 20px;
 }
+
 #pagina-inicial-botoes button {
     width: 100%;
     padding: 15px;
     font-size: 16px;
     border-radius: 8px;
-    background-color: #4CAF50;
+    background-color: #2196F3; /* Azul */
     color: white;
     border: none;
     cursor: pointer;
@@ -232,8 +234,9 @@ button:hover {
 }
 
 #pagina-inicial-botoes button:hover {
-    background-color: #45a049;
+    background-color: #1e88e5; /* Azul mais escuro */
 }
+
 /* Estilos para os botões de presença */
 .btn-presenca {
     padding: 8px 16px;
@@ -248,15 +251,15 @@ button:hover {
 }
 
 .btn-presenca[data-status="P"] {
-    background-color: #4CAF50;
+    background-color: #2196F3; /* Azul */
 }
 
 .btn-presenca[data-status="F"] {
-    background-color: #f44336;
+    background-color: #f44336; /* Vermelho */
 }
 
 .btn-presenca[data-status="FJ"] {
-    background-color: #2196F3;
+    background-color: #2196F3; /* Azul */
 }
 
 .btn-presenca:hover {
