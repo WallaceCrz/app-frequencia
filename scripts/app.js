@@ -10,9 +10,10 @@ const ACCESS_TOKEN = 'ya29.c.c0ASRK0GaopDlZ2fgXzSoVVvqUzury43MNEvaEhlyHeRBGvBTDA
 // Função para obter o token de acesso do backend
 async function getAccessToken() {
     try {
-        const response = await fetch('http://localhost:3000/token');
+        const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=Fsnpm4rxFclXlgwhIOmaaPAbuU-5D3XXsGC2TbQsRCQJJ5o3usWrY5Ulw7T9A0Hnd2a55mcQKkVc9QlYADdH2T6MV2qxPVHkm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLY2akZkiofaDCJp5m2Jv6HAOF8pigkgyLO4qduNzmsIk-wVmANTm_dc6B9IaA3GBwU1ilyFiMBu2MVyXXBGjzY1FG-7dlb48A&lib=MK03d-YApCvcHCyBc5rILbO9D7zY1TYX_');
         const data = await response.json();
         ACCESS_TOKEN = data.token;
+        console.log('Token obtido com sucesso:', ACCESS_TOKEN);
     } catch (erro) {
         console.error('Erro ao obter token:', erro);
     }
@@ -34,6 +35,33 @@ async function fetchSheetData(range) {
         return data;
     } catch (erro) {
         console.error('Erro na requisição:', erro);
+        throw erro;
+    }
+}
+// Função para adicionar dados à planilha
+async function appendSheetData(range, valores) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                values: valores,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao enviar dados para a planilha.');
+        }
+
+        const data = await response.json();
+        console.log('Dados enviados com sucesso:', data);
+        return data;
+    } catch (erro) {
+        console.error('Erro ao enviar dados:', erro);
         throw erro;
     }
 }
