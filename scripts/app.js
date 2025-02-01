@@ -38,7 +38,7 @@ async function appendSheetData(range, valores) {
 
 async function getAccessToken() {
     try {
-        const response = await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=Fsnpm4rxFclXlgwhIOmaaPAbuU-5D3XXsGC2TbQsRCQJJ5o3usWrY5Ulw7T9A0Hnd2a55mcQKkVc9QlYADdH2T6MV2qxPVHkm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLY2akZkiofaDCJp5m2Jv6HAOF8pigkgyLO4qduNzmsIk-wVmANTm_dc6B9IaA3GBwU1ilyFiMBu2MVyXXBGjzY1FG-7dlb48A&lib=MK03d-YApCvcHCyBc5rILbO9D7zY1TYX_');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbxWsKTzrIzQslkZwRZHvByErXEoB0FfQqJ7Z7A1k7WeVMriOkmSZ9uHqlciTVX9kFio/exec');
         if (!response.ok) {
             throw new Error(`Erro ao obter token: ${response.status} ${response.statusText}`);
         }
