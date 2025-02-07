@@ -27,7 +27,6 @@
                 <label for="turma">Selecione a Turma:</label>
                 <select id="turma" name="turma" required>
                     <option value="">Selecione uma turma...</option>
-                    <div class="spinner"></div>
                 </select>
             </div>
         
@@ -49,8 +48,6 @@
                 return;
             }
 
-            showSpinner('turma');
-
             try {
                 const data = await fetchSheetData(TURMAS_RANGE);
                 const turmas = data.values;
@@ -69,22 +66,6 @@
             } catch (erro) {
                 selectTurma.innerHTML = '<option value="">Erro ao carregar turmas.</option>';
                 console.error(erro);
-            } finally {
-                hideSpinner('turma');
-            }
-        }
-
-        function showSpinner(containerId) {
-            const container = document.getElementById(containerId);
-            if (container) {
-                container.innerHTML = '<div class="spinner"></div>';
-            }
-        }
-
-        function hideSpinner(containerId) {
-            const container = document.getElementById(containerId);
-            if (container) {
-                container.innerHTML = '';
             }
         }
 
