@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Aluno</title>
+    <title>Cadastrar e Remover Aluno</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="styles/main.css">
 </head>
@@ -12,11 +12,12 @@
         <ul>
             <li><a href="index.html">Início</a></li>
             <li><a href="turmas.html">Turmas</a></li>
-            <li><a href="cadastro.html">Cadastrar Aluno</a></li>
+            <li><a href="cadastro.html">Gerenciar Alunos</a></li>
         </ul>
     </nav>
+
     <div class="container">
-        <h1>Cadastrar Aluno</h1>
+        <h2>Cadastrar Aluno</h2>
         <form id="form-cadastro">
             <div class="form-group">
                 <label for="nome">Nome do Aluno:</label>
@@ -32,21 +33,39 @@
         
             <button type="submit">Cadastrar</button>
         </form>
-        <button onclick="location.href='index.html'">Voltar</button>
+        
+        <hr>
 
-        <!-- Mensagem de feedback -->
+        <h2>Remover Aluno</h2>
+        <form id="form-remover">
+            <div class="form-group">
+                <label for="turma-remover">Selecione a Turma:</label>
+                <select id="turma-remover" required>
+                    <option value="">Selecione uma turma...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="aluno-remover">Selecione o Aluno:</label>
+                <select id="aluno-remover" required>
+                    <option value="">Selecione um aluno...</option>
+                </select>
+            </div>
+
+            <button type="submit">Remover da Turma</button>
+        </form>
+
+        <button class="sair" onclick="location.href='index.html'">Voltar</button>
         <div id="mensagem-feedback" class="mensagem"></div>
     </div>
+  
     <button class="sair" onclick="logout()">Sair</button>
     <script src="scripts/app.js"></script>
+
     <script>
-        // Função para carregar as turmas no menu dropdown
         async function loadTurmasDropdown() {
             const selectTurma = document.getElementById('turma');
-            if (!selectTurma) {
-                console.error('Elemento com ID "turma" não encontrado.');
-                return;
-            }
+            const selectTurmaRemover = document.getElementById('turma-remover');
 
             try {
                 const data = await fetchSheetData(TURMAS_RANGE);
@@ -54,46 +73,118 @@
 
                 if (turmas && turmas.length > 0) {
                     selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
+                    selectTurmaRemover.innerHTML = '<option value="">Selecione uma turma...</option>';
+
                     turmas.forEach(turma => {
                         const option = document.createElement('option');
-                        option.value = turma[0]; // ID da turma
-                        option.textContent = turma[1]; // Nome da turma
+                        option.value = turma[0]; 
+                        option.textContent = turma[1]; 
                         selectTurma.appendChild(option);
+                        selectTurmaRemover.appendChild(option.cloneNode(true));
                     });
-                } else {
-                    selectTurma.innerHTML = '<option value="">Nenhuma turma cadastrada.</option>';
                 }
             } catch (erro) {
-                selectTurma.innerHTML = '<option value="">Erro ao carregar turmas.</option>';
-                console.error(erro);
+                console.error('Erro ao carregar turmas:', erro);
             }
         }
 
-        // Função para exibir mensagens de feedback
-        function exibirMensagem(mensagem, tipo) {
-            const mensagemDiv = document.getElementById('mensagem-feedback');
-            mensagemDiv.textContent = mensagem;
-            mensagemDiv.className = `mensagem ${tipo}`;
-            mensagemDiv.style.display = 'block';
+        async function loadAlunosDropdown(turmaId) {
+            const selectAlunoRemover = document.getElementById('aluno-remover');
+            selectAlunoRemover.innerHTML = '<option value="">Carregando...</option>';
 
-            // Oculta a mensagem após 3 segundos
-            setTimeout(() => {
-                mensagemDiv.style.display = 'none';
-            }, 3000);
+            try {
+                const data = await fetchSheetData(ALUNOS_RANGE);
+                const alunos = data.values;
+
+                selectAlunoRemover.innerHTML = '<option value="">Selecione um aluno...</option>';
+                alunos.forEach(aluno => {
+                    if (aluno[2] === turmaId) { 
+                        const option = document.createElement('option');
+                        option.value = aluno[0]; 
+                        option.textContent = aluno[1]; 
+                        selectAlunoRemover.appendChild(option);
+                    }
+                });
+
+            } catch (erro) {
+                console.error('Erro ao carregar alunos:', erro);
+                selectAlunoRemover.innerHTML = '<option value="">Erro ao carregar alunos.</option>';
+            }
         }
 
-        // Carrega as turmas ao abrir a página
-        loadTurmasDropdown();
-        
-    document.addEventListener('DOMContentLoaded', function() {
-        // Verifica se o usuário está logado
-        if (localStorage.getItem('logado') !== 'true') {
-            window.location.href = 'login.html'; // Redireciona para a página de login
-        } else {
-            // Carrega as turmas normalmente
-            loadTurmas('lista-turmas');
+        document.getElementById('turma-remover').addEventListener('change', function() {
+            const turmaId = this.value;
+            if (turmaId) {
+                loadAlunosDropdown(turmaId);
+            } else {
+                document.getElementById('aluno-remover').innerHTML = '<option value="">Selecione um aluno...</option>';
+            }
+        });
+
+        document.getElementById('form-remover').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const alunoId = document.getElementById('aluno-remover').value;
+            if (!alunoId) {
+                alert('Selecione um aluno!');
+                return;
+            }
+
+            try {
+                const data = await fetchSheetData(ALUNOS_RANGE);
+                const alunos = data.values;
+                const rowIndex = alunos.findIndex(aluno => aluno[0] === alunoId);
+
+                if (rowIndex === -1) {
+                    alert('Aluno não encontrado.');
+                    return;
+                }
+
+                const rowNumber = rowIndex + 2;
+                const range = `Alunos!C${rowNumber}`; 
+
+                await clearSheetCell(range);
+
+                alert('Aluno removido da turma com sucesso!');
+                document.getElementById('form-remover').reset();
+            } catch (erro) {
+                console.error('Erro ao remover aluno:', erro);
+                alert('Erro ao remover aluno.');
+            }
+        });
+
+        async function clearSheetCell(range) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
+            try {
+                const token = await getValidAccessToken();
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        values: [['']],
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao limpar célula: ${response.status} ${response.statusText}`);
+                }
+                console.log('Célula limpa com sucesso!');
+            } catch (erro) {
+                console.error('Erro ao limpar célula:', erro);
+                throw erro;
+            }
         }
-    });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('logado') !== 'true') {
+                window.location.href = 'login.html';
+            } else {
+                loadTurmasDropdown();
+            }
+        });
     </script>
 </body>
 </html>

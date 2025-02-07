@@ -337,7 +337,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Erro ao inicializar o token:', erro);
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const mensagem = localStorage.getItem('mensagemBoasVindas') || '';
+    if (mensagem) {
+        document.querySelector('spam').innerText = mensagem;
+    }
+});
+
+// Função de logout
 function logout() {
-    localStorage.removeItem('logado'); // Remove o estado de login
-    window.location.href = 'login.html'; // Redireciona para a página de login
+    localStorage.removeItem('logado');
+    localStorage.removeItem('mensagemBoasVindas');
+    window.location.href = 'login.html';
 }
+
+function limparCookies() {
+    localStorage.clear();
+    var cookies = document.cookie.split(";");
+
+    // Limpa todos os cookies
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var equalsPos = cookie.indexOf("=");
+        var name = equalsPos > -1 ? cookie.substr(0, equalsPos) : cookie;
+        document.cookie = name + "=;expires=" + new Date(0).toUTCString() + ";path=/";
+    }
+}
+setInterval(limparCookies, 1800000);

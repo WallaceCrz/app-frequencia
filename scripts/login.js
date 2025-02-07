@@ -1,6 +1,6 @@
 // Configurações da Planilha
 const SPREADSHEET_ID = '1l3tH-7ImeN5U-Refd_kBVCqmJRZ2mYR7QUhuMmt5otw'; // ID da sua planilha
-const LOGIN_RANGE = 'Login!A2:B'; // Intervalo da aba "Login"
+const LOGIN_RANGE = 'Login!A2:C'; // Intervalo da aba "Login"
 const API_KEY = 'AIzaSyDuYHkaWg9HOV2zUbPKESyr3MyKtDJEwkY'; // Sua API Key
 
 // Função para buscar dados da planilha
@@ -30,7 +30,14 @@ async function verificarCredenciais(usuario, senha) {
         }
 
         // Verifica se o usuário e a senha correspondem
-        return dadosLogin.some(credencial => credencial[0] === usuario && credencial[1] === senha);
+        for (const credencial of dadosLogin) {
+            if (credencial[0] === usuario && credencial[1] === senha) {
+                const mensagem = credencial[2] || ''; // Se houver mensagem na coluna C, salva
+                localStorage.setItem('mensagemBoasVindas', mensagem);
+                return true;
+            }
+        }
+        return false;
     } catch (erro) {
         console.error('Erro ao verificar credenciais:', erro);
         return false;
