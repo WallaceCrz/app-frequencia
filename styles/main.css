@@ -69,7 +69,7 @@ nav ul li a:hover {
     font-weight: bold;
 }
 
-.form-group input,{
+.form-group input {
     width: 97%;
     padding: 10px;
     border: 1px solid #ddd;
