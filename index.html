@@ -26,5 +26,13 @@
         </div>
     </div>
     <button class="sair" onclick="logout()">Sair</button>
+     <script>
+    window.onload = function() {
+        // Verifica se o usuário está logado
+        if (!localStorage.getItem('logado')) {
+            window.location.href = 'login.html'; // Redireciona para a página de login se não estiver logado
+        }
+    };
+    </script>
 </body>
 </html>
