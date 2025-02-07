@@ -27,7 +27,7 @@
                 <label for="turma">Selecione a Turma:</label>
                 <select id="turma" name="turma" required>
                     <option value="">Selecione uma turma...</option>
-                    <!-- As turmas serão carregadas aqui -->
+                    <div class="spinner"></div>
                 </select>
             </div>
         
@@ -38,7 +38,7 @@
         <!-- Mensagem de feedback -->
         <div id="mensagem-feedback" class="mensagem"></div>
     </div>
-
+    <button class="sair" onclick="logout()">Sair</button>
     <script src="scripts/app.js"></script>
     <script>
         // Função para carregar as turmas no menu dropdown
@@ -49,13 +49,14 @@
                 return;
             }
 
-            selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
+            showSpinner('turma');
 
             try {
                 const data = await fetchSheetData(TURMAS_RANGE);
                 const turmas = data.values;
 
                 if (turmas && turmas.length > 0) {
+                    selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
                     turmas.forEach(turma => {
                         const option = document.createElement('option');
                         option.value = turma[0]; // ID da turma
@@ -68,6 +69,22 @@
             } catch (erro) {
                 selectTurma.innerHTML = '<option value="">Erro ao carregar turmas.</option>';
                 console.error(erro);
+            } finally {
+                hideSpinner('turma');
+            }
+        }
+
+        function showSpinner(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '<div class="spinner"></div>';
+            }
+        }
+
+        function hideSpinner(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '';
             }
         }
 
@@ -86,6 +103,16 @@
 
         // Carrega as turmas ao abrir a página
         loadTurmasDropdown();
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verifica se o usuário está logado
+        if (localStorage.getItem('logado') !== 'true') {
+            window.location.href = 'login.html'; // Redireciona para a página de login
+        } else {
+            // Carrega as turmas normalmente
+            loadTurmas('lista-turmas');
+        }
+    });
     </script>
 </body>
 </html>

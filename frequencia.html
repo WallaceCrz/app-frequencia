@@ -23,13 +23,39 @@
         </div>
         <div id="lista-alunos">
             <!-- A lista de alunos será carregada aqui -->
-            <p>Carregando alunos...</p>
+            <div class="spinner"></div>
         </div>
         <button onclick="salvarFrequencia()">Salvar Frequência</button>
         <button onclick="location.href='turmas.html'">Voltar</button>
     </div>
+    <button class="sair" onclick="logout()">Sair</button>
 
     <script src="scripts/app.js"></script>
     <script>document.getElementById('data-frequencia').value = new Date().toISOString().split('T')[0];</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verifica se o usuário está logado
+            if (localStorage.getItem('logado') !== 'true') {
+                window.location.href = 'login.html'; // Redireciona para a página de login
+            } else {
+                // Carrega os alunos normalmente
+                loadAlunos();
+            }
+        });
+
+        function showSpinner(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '<div class="spinner"></div>';
+            }
+        }
+
+        function hideSpinner(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '';
+            }
+        }
+    </script>
 </body>
 </html>

@@ -337,3 +337,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Erro ao inicializar o token:', erro);
     }
 });
+function logout() {
+    localStorage.removeItem('logado'); // Remove o estado de login
+    window.location.href = 'login.html'; // Redireciona para a página de login
+}

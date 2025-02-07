@@ -3,9 +3,11 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
     color: #333;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 100vh
 }
+
 
 .container {
     max-width: 800px;
@@ -14,17 +16,18 @@ body {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    display: grid;
 }
 
 h1, h2, h3 {
     text-align: center;
-    color: #2196F3; /* Azul */
+    color: #667eea;
     margin-bottom: 20px;
 }
 
 /* Estilos para o menu de navegação */
 nav {
-    background-color: #2196F3; /* Azul */
+    background-color: #667eea;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -52,7 +55,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #1e88e5; /* Azul mais escuro */
+    background-color: #764ba2;
 }
 
 /* Estilos para formulários */
@@ -80,15 +83,15 @@ nav ul li a:hover {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #2196F3; /* Azul */
-    box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); /* Azul */
+    border-color: #764ba2;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 /* Estilos para botões */
 button {
     width: 100%;
     padding: 10px;
-    background-color: #2196F3; /* Azul */
+    background-color: #667eea;
     color: white;
     border: none;
     border-radius: 4px;
@@ -99,7 +102,7 @@ button {
 }
 
 button:hover {
-    background-color: #1e88e5; /* Azul mais escuro */
+    background-color: #764ba2;
 }
 
 /* Estilos para a lista de alunos e turmas */
@@ -137,15 +140,15 @@ button:hover {
 }
 
 .btn-presenca[data-status="P"] {
-    background-color: #4CAF50; /* Verde */
+    background-color: #4CAF50;
 }
 
 .btn-presenca[data-status="F"] {
-    background-color: #f44336; /* Vermelho */
+    background-color: #f44336;
 }
 
 .btn-presenca[data-status="FJ"] {
-    background-color: #2196F3; /* Azul */
+    background-color: #2196F3;
 }
 
 .btn-presenca:hover {
@@ -213,20 +216,18 @@ button:hover {
         margin-top: 5px;
     }
 }
-
 #pagina-inicial-botoes {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Espaçamento entre os botões */
     margin-top: 20px;
 }
-
 #pagina-inicial-botoes button {
     width: 100%;
     padding: 15px;
     font-size: 16px;
     border-radius: 8px;
-    background-color: #2196F3; /* Azul */
+    background-color: #667eea;
     color: white;
     border: none;
     cursor: pointer;
@@ -234,9 +235,8 @@ button:hover {
 }
 
 #pagina-inicial-botoes button:hover {
-    background-color: #1e88e5; /* Azul mais escuro */
+    background-color: #764ba2;
 }
-
 /* Estilos para os botões de presença */
 .btn-presenca {
     padding: 8px 16px;
@@ -251,17 +251,43 @@ button:hover {
 }
 
 .btn-presenca[data-status="P"] {
-    background-color: #4CAF50; /* Azul */
+    background-color: #4CAF50;
 }
 
 .btn-presenca[data-status="F"] {
-    background-color: #f44336; /* Vermelho */
+    background-color: #f44336;
 }
 
 .btn-presenca[data-status="FJ"] {
-    background-color: #2196F3; /* Azul */
+    background-color: #2196F3;
 }
 
 .btn-presenca:hover {
     opacity: 0.9;
+}
+
+.sair {
+    display: block;
+    margin: 20px auto;
+    width: 20%;
+}
+
+/* Estilos para o spinner */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

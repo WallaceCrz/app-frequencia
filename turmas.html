@@ -19,11 +19,36 @@
         <h1>Seleciona Turma</h1>
         <div id="lista-turmas">
             <!-- As turmas serão carregadas aqui -->
-            <p>Carregando turmas...</p>
+            <div class="spinner"></div>
         </div>        
         <button onclick="location.href='index.html'">Voltar</button>
     </div>
-
+    <button class="sair" onclick="logout()">Sair</button>
     <script src="scripts/app.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verifica se o usuário está logado
+        if (localStorage.getItem('logado') !== 'true') {
+            window.location.href = 'login.html'; // Redireciona para a página de login
+        } else {
+            // Carrega as turmas normalmente
+            loadTurmas('lista-turmas');
+        }
+    });
+
+    function showSpinner(containerId) {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = '<div class="spinner"></div>';
+        }
+    }
+
+    function hideSpinner(containerId) {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = '';
+        }
+    }
+    </script>
 </body>
 </html>
