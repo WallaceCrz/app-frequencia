@@ -306,7 +306,7 @@ if (window.location.pathname.endsWith('turmas.html') || window.location.pathname
 document.getElementById('form-cadastro')?.addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    const nome = document.getElementById('nome').value;
+    const nome = document.getElementById('nome').value.toUpperCase();
     const turmaId = document.getElementById('turma').value;
 
     if (!nome || !turmaId) {
