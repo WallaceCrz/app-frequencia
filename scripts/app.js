@@ -165,16 +165,18 @@ async function loadAlunos() {
             tituloTurma.textContent = `Registrar Frequência - ${turmaSelecionada[1]}`;
         }
 
-        // Carrega os alunos da turma
+        // Carrega os alunos da turma e ordena por nome (coluna 1)
         const dataAlunos = await fetchSheetData(ALUNOS_RANGE);
-        const alunos = dataAlunos.values.filter(row => row[2] === turmaId); // Filtra alunos pela turma
+        const alunos = dataAlunos.values
+            .filter(row => row[2] === turmaId) // Filtra alunos pela turma
+            .sort((a, b) => a[1].localeCompare(b[1])); // Ordena por nome (coluna 1)
 
-        if (alunos && alunos.length > 0) {
+        if (alunos.length > 0) {
             listaAlunos.innerHTML = ''; // Limpa o conteúdo anterior
-            alunos.forEach((aluno, index) => {
+            alunos.forEach((aluno) => {
                 const alunoDiv = document.createElement('div');
                 alunoDiv.className = 'aluno-item';
-                alunoDiv.setAttribute('data-id', index + 1); // ID autoincrementado (1, 2, 3, ...)
+                alunoDiv.setAttribute('data-id', aluno[0]); // Usa o ID da coluna A da planilha
                 alunoDiv.innerHTML = `
                     <span>${aluno[1]}</span>
                     <button class="btn-presenca" data-status="P">P</button>
@@ -183,8 +185,7 @@ async function loadAlunos() {
             });
 
             // Adiciona o evento de clique aos botões de presença
-            const botoesPresenca = document.querySelectorAll('.btn-presenca');
-            botoesPresenca.forEach(botao => {
+            document.querySelectorAll('.btn-presenca').forEach(botao => {
                 botao.addEventListener('click', alternarPresenca);
             });
         } else {
