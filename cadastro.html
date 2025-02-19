@@ -54,64 +54,111 @@
 
             <button type="submit">Remover da Turma</button>
         </form>
+        <hr>
+
+<h2>Editar Frequência</h2>
+<form id="form-editar-frequencia">
+    <div class="form-group">
+        <label for="turma-editar">Selecione a Turma:</label>
+        <select id="turma-editar" required>
+            <option value="">Selecione uma turma...</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="aluno-editar">Selecione o Aluno:</label>
+        <select id="aluno-editar" required>
+            <option value="">Selecione um aluno...</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="data-editar">Selecione a Data:</label>
+        <input type="date" id="data-editar" required>
+    </div>
+
+    <div class="form-group">
+        <label for="status-editar">Status de Frequência:</label>
+        <select id="status-editar" required>
+            <option value="P">Presente (P)</option>
+            <option value="F">Falta (F)</option>
+            <option value="FJ">Falta Justificada (FJ)</option>
+        </select>
+    </div>
+
+    <button type="submit">Atualizar Frequência</button>
+</form>
 
         <button class="sair" onclick="location.href='index.html'">Voltar</button>
         <div id="mensagem-feedback" class="mensagem"></div>
+        
     </div>
+    
   
     <button class="sair" onclick="logout()">Sair</button>
     <script src="scripts/app.js"></script>
 
     <script>
-        async function loadTurmasDropdown() {
-            const selectTurma = document.getElementById('turma');
-            const selectTurmaRemover = document.getElementById('turma-remover');
+       async function loadTurmasDropdown() {
+    const selectTurma = document.getElementById('turma');
+    const selectTurmaRemover = document.getElementById('turma-remover');
+    const selectTurmaEditar = document.getElementById('turma-editar');
 
-            try {
-                const data = await fetchSheetData(TURMAS_RANGE);
-                const turmas = data.values;
+    try {
+        const data = await fetchSheetData(TURMAS_RANGE);
+        const turmas = data.values;
 
-                if (turmas && turmas.length > 0) {
-                    selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
-                    selectTurmaRemover.innerHTML = '<option value="">Selecione uma turma...</option>';
+        if (turmas && turmas.length > 0) {
+            selectTurma.innerHTML = '<option value="">Selecione uma turma...</option>';
+            selectTurmaRemover.innerHTML = '<option value="">Selecione uma turma...</option>';
+            selectTurmaEditar.innerHTML = '<option value="">Selecione uma turma...</option>';
 
-                    turmas.forEach(turma => {
-                        const option = document.createElement('option');
-                        option.value = turma[0]; 
-                        option.textContent = turma[1]; 
-                        selectTurma.appendChild(option);
-                        selectTurmaRemover.appendChild(option.cloneNode(true));
-                    });
-                }
-            } catch (erro) {
-                console.error('Erro ao carregar turmas:', erro);
-            }
+            turmas.forEach(turma => {
+                const option = document.createElement('option');
+                option.value = turma[0]; // ID da turma
+                option.textContent = turma[1]; // Nome da turma
+                selectTurma.appendChild(option);
+                selectTurmaRemover.appendChild(option.cloneNode(true));
+                selectTurmaEditar.appendChild(option.cloneNode(true));
+            });
         }
+    } catch (erro) {
+        console.error('Erro ao carregar turmas:', erro);
+    }
+}
 
-        async function loadAlunosDropdown(turmaId) {
-            const selectAlunoRemover = document.getElementById('aluno-remover');
-            selectAlunoRemover.innerHTML = '<option value="">Carregando...</option>';
+async function loadAlunosDropdown(turmaId, selectId) {
+    const selectAluno = document.getElementById(selectId);
+    selectAluno.innerHTML = '<option value="">Carregando...</option>';
 
-            try {
-                const data = await fetchSheetData(ALUNOS_RANGE);
-                const alunos = data.values;
+    try {
+        const data = await fetchSheetData(ALUNOS_RANGE);
+        const alunos = data.values;
 
-                selectAlunoRemover.innerHTML = '<option value="">Selecione um aluno...</option>';
-                alunos.forEach(aluno => {
-                    if (aluno[2] === turmaId) { 
-                        const option = document.createElement('option');
-                        option.value = aluno[0]; 
-                        option.textContent = aluno[1]; 
-                        selectAlunoRemover.appendChild(option);
-                    }
-                });
-
-            } catch (erro) {
-                console.error('Erro ao carregar alunos:', erro);
-                selectAlunoRemover.innerHTML = '<option value="">Erro ao carregar alunos.</option>';
+        selectAluno.innerHTML = '<option value="">Selecione um aluno...</option>';
+        alunos.forEach(aluno => {
+            if (aluno[2] === turmaId) { // Filtra alunos pela turma
+                const option = document.createElement('option');
+                option.value = aluno[0]; // ID do aluno
+                option.textContent = aluno[1]; // Nome do aluno
+                selectAluno.appendChild(option);
             }
-        }
+        });
 
+    } catch (erro) {
+        console.error('Erro ao carregar alunos:', erro);
+        selectAluno.innerHTML = '<option value="">Erro ao carregar alunos.</option>';
+    }
+}
+
+document.getElementById('turma-editar').addEventListener('change', function() {
+    const turmaId = this.value;
+    if (turmaId) {
+        loadAlunosDropdown(turmaId, 'aluno-editar');
+    } else {
+        document.getElementById('aluno-editar').innerHTML = '<option value="">Selecione um aluno...</option>';
+    }
+});
         document.getElementById('turma-remover').addEventListener('change', function() {
             const turmaId = this.value;
             if (turmaId) {
@@ -185,6 +232,128 @@
                 loadTurmasDropdown();
             }
         });
+       
+        document.getElementById('aluno-editar').addEventListener('change', async function() {
+    const alunoId = this.value;
+    const data = document.getElementById('data-editar').value;
+
+    if (alunoId && data) {
+        try {
+            const frequencia = await buscarFrequencia(alunoId, data);
+            if (frequencia) {
+                document.getElementById('status-editar').value = frequencia;
+            } else {
+                alert('Nenhum registro de frequência encontrado para esta data.');
+            }
+        } catch (erro) {
+            console.error('Erro ao buscar frequência:', erro);
+        }
+    }
+});
+
+async function buscarFrequencia(alunoId, data) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Frequencia!A2:D`;
+    try {
+        const token = await getValidAccessToken();
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao carregar dados da planilha: ${response.status} ${response.statusText}`);
+        }
+
+        const dataPlanilha = await response.json();
+        const frequencias = dataPlanilha.values;
+
+        const registro = frequencias.find(row => row[1] === alunoId && row[2] === data); // Filtra por ID do aluno e data
+        return registro ? registro[3] : null; // Retorna o status de frequência (coluna D)
+    } catch (erro) {
+        console.error('Erro ao buscar frequência:', erro);
+        throw erro;
+    }
+}
+
+
+document.getElementById('form-editar-frequencia').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const alunoId = document.getElementById('aluno-editar').value;
+    const data = document.getElementById('data-editar').value;
+    const status = document.getElementById('status-editar').value;
+
+    if (!alunoId || !data || !status) {
+        alert('Preencha todos os campos!');
+        return;
+    }
+
+    try {
+        await atualizarFrequencia(alunoId, data, status);
+        alert('Frequência atualizada com sucesso!');
+    } catch (erro) {
+        console.error('Erro ao atualizar frequência:', erro);
+        alert('Erro ao atualizar frequência.');
+    }
+});
+
+async function atualizarFrequencia(alunoId, data, status) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Frequencia!A2:D`;
+    try {
+        const token = await getValidAccessToken();
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao carregar dados da planilha: ${response.status} ${response.statusText}`);
+        }
+
+        const dataPlanilha = await response.json();
+        const frequencias = dataPlanilha.values;
+
+        const rowIndex = frequencias.findIndex(row => row[1] === alunoId && row[2] === data); // Encontra o registro
+        if (rowIndex === -1) {
+            throw new Error('Registro de frequência não encontrado.');
+        }
+
+        const rowNumber = rowIndex + 2; // Ajusta o índice para o número da linha na planilha
+        const range = `Frequencia!D${rowNumber}`; // Coluna D (status de frequência)
+
+        await updateSheetCell(range, status);
+    } catch (erro) {
+        console.error('Erro ao atualizar frequência:', erro);
+        throw erro;
+    }
+}
+
+async function updateSheetCell(range, value) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
+    try {
+        const token = await getValidAccessToken();
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                values: [[value]],
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao atualizar célula: ${response.status} ${response.statusText}`);
+        }
+        console.log('Célula atualizada com sucesso!');
+    } catch (erro) {
+        console.error('Erro ao atualizar célula:', erro);
+        throw erro;
+    }
+}
     </script>
 </body>
 </html>
