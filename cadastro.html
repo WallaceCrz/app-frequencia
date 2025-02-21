@@ -162,7 +162,7 @@ document.getElementById('turma-editar').addEventListener('change', function() {
         document.getElementById('turma-remover').addEventListener('change', function() {
             const turmaId = this.value;
             if (turmaId) {
-                loadAlunosDropdown(turmaId);
+                loadAlunosDropdown(turmaId, 'aluno-remover');
             } else {
                 document.getElementById('aluno-remover').innerHTML = '<option value="">Selecione um aluno...</option>';
             }
